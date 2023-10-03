@@ -9,6 +9,10 @@
 
 using namespace std;
 using namespace std::chrono;
+using namespace std::this_thread;
+
+int num_of_fixed = 5;
+int num_of_variable = 5;
 
 /*
     Tasks: 
@@ -30,6 +34,14 @@ using namespace std::chrono;
         Add another task that always runs (in addition to the other two) and calculates the frequencies of each word in the lorem ipsum text tokens, and prints them just before it joins
 */
 
+
+void variable_processor(string text) {
+    sleep_for(milliseconds(text.length()));
+};
+
+void fixed_processor(string text) {
+    sleep_for(milliseconds(2));
+};
 
 // This is some sample code provided for use within tasks/threads. 
 struct work_pile_t
@@ -107,8 +119,30 @@ int main(int argc, char **argv)
 {
     // TODO: create threads
 
+    //make a bunch of threads for variable and fixed tasks
+
+    vector<thread> fixed_threads;
+    vector<thread> variable_threads;
+
+    for (int i = 0; i < num_of_fixed; i++)
+    {
+        fixed_threads.push_back(thread());
+    }
+
+    for (int i = 0; i < num_of_variable; i++)
+    {
+        variable_threads.push_back(thread());
+    }
+
+    //create function to get notifications for fixed threads
+    //create function to get notifications for variable threads
+
+
+
     // Continuous loop that reads some text and pu
     work_pile_t work_pile;
+
+    //initialise thread pool
 
     // TODO: later on, replace this while loop with the lorem ipsum processing
     while (true)
@@ -116,11 +150,44 @@ int main(int argc, char **argv)
         std::string text;
         std::cin >> text;
         if (text == "stop")
+            //stop all threads
+            //empty vector
             break;
         work_pile.Put(text);
+
+        //go through work pile and allocate things to threads
+
+        //loop through work_pile.num, check if the data is more or less than 4 characters
+        string i = "";
+
+        while (work_pile.Num() != 0)
+        {
+            i = work_pile.Pop();
+
+
+
+            // if task is less than 4, create that thread and then do -1 to the number of "available threads" of that type
+
+            //if the current thread limit is reached, wait for a notification of that thread type
+
+
+            if (i.length() <= 4)
+                if (num_of_fixed > 0){
+                    num_of_fixed--;
+                    cout << "fixed processor" << endl;
+                }   
+                else
+                    cout << "waiting for fixed" << endl;
+            if (i.length() > 4)
+                if (num_of_variable > 0) {
+                    num_of_variable--;
+                cout << "variable processor" << endl;
+        }
     }
 
     // TODO: exit gracefully
+
+    //loop through all the processes and end them
 
     return 0;
 }
