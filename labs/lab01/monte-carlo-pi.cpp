@@ -9,7 +9,10 @@
 using namespace std;
 using namespace std::chrono;
 
-void monte_carlo_pi(size_t iterations)
+
+// # add an input of promise (with the unsigned int type)
+
+unsigned int monte_carlo_pi(size_t iterations)
 {
     // Seed with real random number if available
     random_device r;
@@ -34,6 +37,7 @@ void monte_carlo_pi(size_t iterations)
     }
     // Calculate pi
     auto pi = (4.0 * in_circle) / static_cast<double>(iterations);
+    return in_circle;
 }
 
 int main(int argc, char **argv)
@@ -57,19 +61,40 @@ int main(int argc, char **argv)
             auto start = system_clock::now();
             // We need to create total_threads threads
             vector<thread> threads;
+            vector<int> integers;
+            
+            // # make vector of promises and futures
+            
             threads.reserve(total_threads);
             for (size_t n = 0; n < total_threads; ++n)
+
+                // # create promise
+                
+                //# auto result is the promises [.get_future()]
+                
+
+                // # add to the threads the promise using std::move(promise)
                 // Working in base 2 to make things a bit easier
-                threads.push_back(thread(monte_carlo_pi, 1 << (24 - num_threads_power_of_two) ));
+               threads.push_back(thread(monte_carlo_pi, 1 << (24 - num_threads_power_of_two) ));
+
+            // # get int from promise
+
+
             // Join the threads (wait for them to finish)
             for (auto &t : threads)
                 t.join();
+
+            // # pushback integers list with the future
+            
+            
             // Get the end time
             auto end = system_clock::now();
             // Get the total time
             auto total = end - start;
             // Convert to milliseconds and save
             total_ms += duration_cast<milliseconds>(total).count();
+
+            // calculate total number of in circle values
         }
         // output to file
         data << "," << total_ms / MAX_ITERS << endl;
